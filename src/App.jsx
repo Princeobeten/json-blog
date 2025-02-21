@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './index.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = "https://json-blog-gilt.vercel.app";
 
 function App() {
   // State for storing blog posts
