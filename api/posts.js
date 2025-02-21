@@ -1,11 +1,11 @@
-import { createServer } from 'json-server';
-const server = createServer();
-const router = server.router('db.json');
-const middlewares = server.defaults();
+const jsonServer = require('json-server');
+const server = jsonServer.create();
+const router = jsonServer.router('db.json');
+const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
 server.use(router);
 
-export default (req, res) => {
+module.exports = (req, res) => {
   server(req, res);
 };
