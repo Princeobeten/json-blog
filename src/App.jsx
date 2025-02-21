@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './index.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function App() {
   // State for storing blog posts
   const [posts, setPosts] = useState([]);
@@ -15,7 +17,7 @@ function App() {
 
   // Fetch posts from the "database" on component mount
   useEffect(() => {
-    fetch('http://localhost:5000/posts')
+    fetch(`${API_URL}/posts`)
       .then((response) => response.json())
       .then((data) => setPosts(data));
   }, []);
@@ -35,7 +37,7 @@ function App() {
 
     if (editingPostId !== null) {
       // Edit existing post
-      fetch(`http://localhost:5000/posts/${editingPostId}`, {
+      fetch(`${API_URL}/posts/${editingPostId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +56,7 @@ function App() {
         .catch((error) => console.error('Error updating post:', error));
     } else {
       // Create a new post
-      fetch('http://localhost:5000/posts', {
+      fetch(`${API_URL}/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +86,7 @@ function App() {
 
   // Handle deleting a post
   const handleDelete = (postId) => {
-    fetch(`http://localhost:5000/posts/${postId}`, {
+    fetch(`${API_URL}/posts/${postId}`, {
       method: 'DELETE',
     })
       .then(() => {
