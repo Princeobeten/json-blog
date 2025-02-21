@@ -1,0 +1,58 @@
+.app-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.posts-list {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.new-post-form {
+  flex: 1;
+}
+
+.post-item {
+  background: #f9f9f9;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.editButton {
+  background-color: #008CBA;
+  margin-right: 10px;
+}
+
+.editButton:hover {
+  background-color: #0077A3;
+}
+
+.deleteButton {
+  background-color: #f44336;
+}
+
+.deleteButton:hover {
+  background-color: #da190b;
+}
