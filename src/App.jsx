@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './index.css';
 
-const API_URL = "https://json-blog-gilt.vercel.app";
+const API_URL = "/api";
 
 function App() {
   // State for storing blog posts
@@ -18,8 +18,14 @@ function App() {
   // Fetch posts from the "database" on component mount
   useEffect(() => {
     fetch(`${API_URL}/posts`)
-      .then((response) => response.json())
-      .then((data) => setPosts(data));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => setPosts(data))
+      .catch((error) => console.error('Error fetching posts:', error));
   }, []);
 
   // Handle changes in the form
@@ -35,41 +41,37 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (editingPostId !== null) {
-      // Edit existing post
-      fetch(`${API_URL}/posts/${editingPostId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newPost),
+    const requestOptions = {
+      method: editingPostId !== null ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newPost),
+    };
+
+    const url = editingPostId !== null ? `${API_URL}/posts/${editingPostId}` : `${API_URL}/posts`;
+
+    fetch(url, requestOptions)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
       })
-        .then((response) => response.json())
-        .then((updatedPost) => {
+      .then((data) => {
+        if (editingPostId !== null) {
           setPosts((prevPosts) =>
             prevPosts.map((post) =>
-              post.id === editingPostId ? updatedPost : post
+              post.id === editingPostId ? data : post
             )
           );
-          console.log('Post updated:', updatedPost);
-        })
-        .catch((error) => console.error('Error updating post:', error));
-    } else {
-      // Create a new post
-      fetch(`${API_URL}/posts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newPost),
-      })
-        .then((response) => response.json())
-        .then((data) => {
+          console.log('Post updated:', data);
+        } else {
           setPosts((prevPosts) => [...prevPosts, data]);
           console.log('Post saved:', data);
-        })
-        .catch((error) => console.error('Error saving post:', error));
-    }
+        }
+      })
+      .catch((error) => console.error('Error saving post:', error));
 
     setNewPost({ title: '', content: '' });
     setEditingPostId(null); // Reset the editing state
